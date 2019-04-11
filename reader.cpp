@@ -7,12 +7,21 @@ Reader::Reader(std::string _path) : path(_path) {
     input.open(path);
 }
 
-std::string Reader::readNewLine() {
+bool Reader::readNewLine() {
+    bool ok = true;
     try {
-        std::getline(input, line);
+        input >> lastValue.x >> lastValue.y >> lastValue.z;
     } catch (std::ifstream::failure e) {
-        // TODO
-        line = "";
+        ok = false;
     }
-    return line;
+
+    if (ok) {
+        lastValue = newValue;
+    }
+
+    return ok;
+}
+
+AccData Reader::getLastValue() {
+    return lastValue;
 }
