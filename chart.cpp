@@ -2,18 +2,21 @@
 
 #include "chart.h"
 
-RandomPoints::RandomPoints(int _timeDelay, QWidget* parent) : QWidget(parent) {
-    timeDelay = _timeDelay;
-    resize(WIDTH, HEIGHT);
+Chart::Chart(int _windowSize, int _timeDelay, Reader* _reader, QWidget* parent) : 
+    windowSize(_windowSize), 
+    timeDelay(_timeDelay), 
+    reader(_reader), 
+    QWidget(parent) 
+{
     startTimer(timeDelay);
 }
 
-void RandomPoints::paintEvent(QPaintEvent *e) {
+void Chart::paintEvent(QPaintEvent *e) {
     Q_UNUSED(e);
     doDrawing();
 }
 
-void RandomPoints::keyPressEvent(QKeyEvent *e) {
+void Chart::keyPressEvent(QKeyEvent *e) {
     // TODO use key
     // int key = e->key();
 
@@ -22,14 +25,15 @@ void RandomPoints::keyPressEvent(QKeyEvent *e) {
     QWidget::keyPressEvent(e); 
 }
 
-void RandomPoints::timerEvent(QTimerEvent *e) {
+void Chart::timerEvent(QTimerEvent *e) {
     Q_UNUSED(e);
     repaint();
     QWidget::timerEvent(e);
 }
 
-void RandomPoints::doDrawing() {
+void Chart::doDrawing() {
     // TODO
+    // generate random points, for testing
     QPainter qp(this);
     QPen pen(Qt::black, 2, Qt::SolidLine);
     qp.setPen(pen);
