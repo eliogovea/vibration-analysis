@@ -23,5 +23,4 @@ class FFT {
         void transform(std::vector <double>*, std::vector <base>*, int n);  
 
         std::vector <double> * X;
-        
 };

@@ -2,12 +2,15 @@
 
 #include "chart.h"
 
-Chart::Chart(int _windowSize, int _timeDelay, Reader* _reader, QWidget* parent) : 
+Chart::Chart(int _windowSize, int _timeDelay, std::string inputFile, QWidget* parent) : 
     windowSize(_windowSize), 
-    timeDelay(_timeDelay), 
-    reader(_reader), 
+    timeDelay(_timeDelay),
     QWidget(parent) 
 {
+    reader = new Reader(inputFile);
+    buffer = new Buffer(_windowSize);
+    fft = new FFT();
+
     startTimer(timeDelay);
 }
 

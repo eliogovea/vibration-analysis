@@ -3,7 +3,7 @@
 
 #include "reader.h"
 
-Reader::Reader(std::string _path, int _bufferSize) : path(_path), bufferSize(_bufferSize) {
+Reader::Reader(std::string _path) : path(_path) {
     input.open(path);
 }
 

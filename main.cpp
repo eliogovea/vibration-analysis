@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 #include <QApplication>
 
@@ -7,7 +8,7 @@
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    RandomPoints window(1000);
+    Chart window(1024, 100, "input.txt", nullptr);
 
     window.show();
 

@@ -3,11 +3,10 @@
 
 class Reader {
     public:
-        Reader(std::string, int);
+        Reader(std::string);
         std::string readNewLine();
     private:
         std::string const path;
-        int bufferSize;
         std::ifstream input;
         std::string line;
 };
