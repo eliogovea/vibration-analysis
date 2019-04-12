@@ -21,8 +21,8 @@ class Chart : public QWidget {
         void timerEvent(QTimerEvent *);
         void doDrawing();
     private:
-        int WIDTH = 500;
-        int HEIGHT = 500;
+        int WIDTH = 320; 
+        int HEIGHT = 240;
         int windowSize;
         int timeDelay;
         Reader* reader;

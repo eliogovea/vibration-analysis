@@ -77,26 +77,24 @@ void Chart::doDrawing() {
     static auto X = new std::vector <std::complex <double>>;
     X->resize(windowSize);
 
-    for (int i = 0, last_x = 0, last_y = 0; i < (int)buffer->size(); i++) {
-        // int x = i;
-        // int y = 51.0 + buffer->at(i).x * 50.0;
+    for (int i = 0; i < (int)buffer->size(); i++) {
+        x->at(i) = buffer->at(i).x;
+    }
 
-        for (int i = 0; i < windowSize; i++) {
-            x->at(i) = buffer->at(i).x;
-        }
+    fft->transform(x, X, windowSize, false);
 
-        fft->transform(x, X, windowSize);
+    double mx = std::numeric_limits<double>::min();
+    double mn = std::numeric_limits<double>::max();
 
-        double mx = std::numeric_limits<double>::min();
-        double mn = std::numeric_limits<double>::max();
+    for (int i = 0; i < windowSize; i++) {
+        mx = std::max(mx, std::abs(X->at(i)));
+        mn = std::min(mn, std::abs(X->at(i)));
+    }
 
-        for (int i = 0; i < windowSize; i++) {
-            mx = std::max(mx, std::abs(X->at(i)));
-            mn = std::min(mn, std::abs(X->at(i)));
-        }
-
-        int xx = (double)i / (buffer->size()) * (double)WIDTH;
-        int yy = (abs(X->at(i)) - mn) / (mx - mn) * HEIGHT;
+    // first half only
+    for (int i = 0, last_x = 0, last_y = 0, xx, yy; i < windowSize / 2; i++) {
+        xx = (double)i / (0.5 * (double)windowSize) * (double)WIDTH;
+        yy = (abs(X->at(i)) - mn) / (mx - mn) * HEIGHT;
         yy = HEIGHT - yy;
 
         // int y = (buffer->at(i).x - (-1)) / 2.0 * (double)HEIGHT;
@@ -111,12 +109,12 @@ void Chart::doDrawing() {
 }
 
 void Chart::getData(AccData v) {
-    std::cout << "new data: " << v.x << " " << v.y << " " << v.z << "\n";
+    // std::cout << "new data: " << v.x << " " << v.y << " " << v.z << "\n";
     buffer->addValue(v);
 }
 
 void Chart::getDouble(double v) {
-    std::cout << "new single value" << v << "\n";
+    // std::cout << "new single value" << v << "\n";
     buffer->addValue(AccData(v, 0, 0));
     repaint();
 }
