@@ -1,5 +1,6 @@
 #include <complex>
 #include <vector>
+#include <cmath>
 
 #include "fft.h"
 

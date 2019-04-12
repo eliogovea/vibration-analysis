@@ -1,17 +1,18 @@
+#pragma once
+
 #include <vector>
 
-#include "accdata.h"
-
+template <class T>
 class Buffer {
     private:
         int _size;
         int head;
-        std::vector <AccData> values;
+        std::vector <T> values;
     public:
         Buffer(int);
-        void addValue(AccData);
+        void addValue(T);
         size_t size() const;
-        AccData at(int) const;
-        AccData operator [] (int idx) const;
-
+        const T& at(int) const;
+        const T& operator [] (int idx) const;
 };
+

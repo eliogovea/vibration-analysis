@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QWidget>
 #include <complex>
+
+#include <QWidget>
 
 #include "reader.h"
 #include "buffer.h"
@@ -26,6 +27,6 @@ class Chart : public QWidget {
         int windowSize;
         int timeDelay;
         Reader* reader;
-        Buffer* buffer;
+        Buffer<AccData>* buffer;
         FFT* fft;
 };

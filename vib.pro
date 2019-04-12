@@ -22,3 +22,5 @@ HEADERS += accdata.h buffer.h chart.h fft.h reader.h
 SOURCES += accdata.cpp buffer.cpp chart.cpp fft.cpp main.cpp reader.cpp
 
 QT += widgets
+
+QMAKE_CXXFLAGS += -std=gnu++14

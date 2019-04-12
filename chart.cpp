@@ -9,6 +9,11 @@
 #include <QThread>
 
 #include "chart.h"
+#include "buffer.h"
+#include "fft.h"
+#include "accdata.h"
+
+extern template class Buffer<AccData>;
 
 Chart::Chart(int _windowSize, int _timeDelay, std::string inputFile, QWidget* parent) : 
     windowSize(_windowSize), 
@@ -22,7 +27,7 @@ Chart::Chart(int _windowSize, int _timeDelay, std::string inputFile, QWidget* pa
     QObject::connect(reader, &Reader::newDataX, this, &Chart::getDouble);
     inputThread->start();
 
-    buffer = new Buffer(_windowSize);
+    buffer = new Buffer<AccData>(_windowSize);
     fft = new FFT();
 
     resize(WIDTH, HEIGHT);
