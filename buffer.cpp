@@ -41,7 +41,7 @@ template const AccData& Buffer<AccData>::at(int) const;
 template const AccData& Buffer<AccData>::operator[] (int) const ;
 
 template Buffer<double>::Buffer(int);
-template void Buffer<double>::addValue(AccData);
+template void Buffer<double>::addValue(double);
 template size_t Buffer<double>::size() const;
 template const double& Buffer<double>::at(int) const;
 template const double& Buffer<double>::operator[] (int) const ;
