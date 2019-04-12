@@ -7,7 +7,7 @@
 class FFT {
     using base = std::complex <double>;
     static constexpr double PI = acos(-1);
-    static constexpr double MAX_SIZE = 1 << 15; // fix ???
+    static constexpr size_t MAX_SIZE = 1 << 15; // fix ???
     public:
         FFT();
 
