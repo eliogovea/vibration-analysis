@@ -7,6 +7,7 @@
 class FFT {
     using base = std::complex <double>;
     static constexpr double PI = acos(-1);
+    static constexpr double MAX_SIZE = 1 << 15; // fix ???
     public:
         FFT();
 
@@ -20,7 +21,8 @@ class FFT {
         void applyWindow(std::vector <double>*, std::vector <double>*);
 
         // fft
-        void transform(std::vector <double>*, std::vector <base>*, int n);  
+        void transform(std::vector <double>*, std::vector <base>*, int, bool);  
 
-        std::vector <double> * X;
+        std::vector<double>* a;
+        std::vector<std::complex<double>>* A;
 };

@@ -1,10 +1,11 @@
 #include <complex>
-#include <QVector>
+#include <vector>
 
 #include "fft.h"
 
 FFT::FFT() {
-    //
+    a = new std::vector<double>(MAX_SIZE);
+    A = new std::vector<std::complex<double>>(MAX_SIZE);
 }
 
 bool FFT::isPowerOfTwo(int value) {
@@ -40,7 +41,7 @@ void applyWindow(std::vector <double>* x, std::vector <double>* w) {
     }
 }
 
-void FFT::transform(std::vector <double> *x, std::vector <base> *X, int n) {
+void FFT::transform(std::vector <double> *x, std::vector <base> *X, int n, bool shift = true) {
     // assert(isPowerOfTow(n)); // TODO
     if ((int)X->size() < n) {
         X->resize(n);
@@ -52,7 +53,7 @@ void FFT::transform(std::vector <double> *x, std::vector <base> *X, int n) {
         if (i >= (int)X->size()) {
             break;
         }
-        X->at(reverseBits(i, ln)) = base(x->at(i));
+        A->at(reverseBits(i, ln)) = base(x->at(i));
     }
 
     for (int len = 2; len <= n; len <<= 1) {
@@ -62,12 +63,28 @@ void FFT::transform(std::vector <double> *x, std::vector <base> *X, int n) {
         for (int i = 0; i < n; i += len) {
             auto w = base(1, 0);
             for (int j = 0; j < halfLen; j++) {
-                base u = X->at(i + j);
-                base v = X->at(i + j + halfLen) * w;
-                X->at(i + j) = u + v;
-                X->at(i + j + halfLen) = u - v;
+                base u = A->at(i + j);
+                base v = A->at(i + j + halfLen) * w;
+                A->at(i + j) = u + v;
+                A->at(i + j + halfLen) = u - v;
                 w *= root;
             }
+        }
+    }
+
+    if (shift) {
+        int pos_X = 0;
+        int pos_A = n >> 1;
+        for (int i = 0; i < (n >> 1); i++) {
+            X->at(pos_X++) = A->at(pos_A++);
+        }
+        pos_A = 0;
+        for (int i =0 ; i < (n >> 1); i++) {
+            X->at(pos_X++) = A->at(pos_A++);
+        }
+    } else {
+        for (int i = 0; i < n; i++) {
+            X->at(i) = A->at(i);
         }
     }
 }
