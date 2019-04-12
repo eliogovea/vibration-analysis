@@ -2,7 +2,7 @@
 
 #include "accdata.h"
 
-AccData::AccData() : x(0), y(0), z(0) {
+AccData::AccData(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {
 
 }
 

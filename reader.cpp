@@ -7,12 +7,9 @@
 
 Reader::Reader(std::string _path) : path(_path) {
     input.open(path);
-    watcher.addPath(QString::fromStdString(path));
 
-
-    QObject::connect(&watcher, &QFileSystemWatcher::fileChanged, this, &Reader::readNewLine);
-
-//    connect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(readNewLine()));
+    // watcher.addPath(QString::fromStdString(path));
+    // QObject::connect(&watcher, &QFileSystemWatcher::fileChanged, this, &Reader::readNewLine);
 }
 
 bool Reader::readNewLine() {
@@ -25,15 +22,19 @@ bool Reader::readNewLine() {
 
     if (ok) {
         lastValue = newValue;
-    } else {
-        lastValue.x = 0;
-        lastValue.y = 0;
-        lastValue.z = 0;
     }
 
-    std::cout << lastValue.x << " " << lastValue.y << " " << lastValue.z << "\n";
-
     return ok;
+}
+
+bool Reader::start() {
+    std::cout << "start reading\n";
+    while (std::cin >> lastValue) {
+        emit newData(lastValue);
+        emit newDataX(lastValue.x);
+        emit newDataY(lastValue.y);
+        emit newDataZ(lastValue.z);
+    }
 }
 
 AccData Reader::getLastValue() {

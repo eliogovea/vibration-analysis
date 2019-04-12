@@ -9,16 +9,22 @@
 #include "accdata.h"
 
 class Reader : public QObject {
+    Q_OBJECT
     public:
         Reader(std::string);
         AccData getLastValue();
+    signals:
+        void newDataX(double x);
+        void newDataY(double y);
+        void newDataZ(double z);
+        void newData(AccData v);
+    public slots:
+        bool readNewLine();
+        bool start();
     private:
-        QFileSystemWatcher watcher;
+        // QFileSystemWatcher watcher;
         std::string const path;
         std::ifstream input;
         AccData lastValue = AccData();
         AccData newValue = AccData();
-    public slots:
-        bool readNewLine();
-        
 };

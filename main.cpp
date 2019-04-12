@@ -8,7 +8,7 @@
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    Chart window(1024, 100, "input.txt", nullptr);
+    Chart window(64, 1000, "/dev/stdin", nullptr);
 
     window.show();
 

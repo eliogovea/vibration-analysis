@@ -1,5 +1,12 @@
-#include <QPainter>
 #include <iostream>
+#include <vector>
+#include <complex>
+#include <algorithm>
+#include <limits>
+
+#include <QObject>
+#include <QPainter>
+#include <QThread>
 
 #include "chart.h"
 
@@ -8,11 +15,18 @@ Chart::Chart(int _windowSize, int _timeDelay, std::string inputFile, QWidget* pa
     timeDelay(_timeDelay),
     QWidget(parent) 
 {
+    QThread *inputThread = new QThread;
     reader = new Reader(inputFile);
+    reader->moveToThread(inputThread);
+    QObject::connect(inputThread, &QThread::started, reader, &Reader::start);
+    QObject::connect(reader, &Reader::newDataX, this, &Chart::getDouble);
+    inputThread->start();
+
     buffer = new Buffer(_windowSize);
     fft = new FFT();
 
-    startTimer(timeDelay);
+    resize(WIDTH, HEIGHT);
+    // startTimer(timeDelay);
 }
 
 void Chart::paintEvent(QPaintEvent *e) {
@@ -45,27 +59,64 @@ void Chart::doDrawing() {
     QPainter qp(this);
     QPen pen(Qt::black, 2, Qt::SolidLine);
     qp.setPen(pen);
-
+/*
     // generate random points, for testing
-//    int last_x = 0;
-//    int last_y = 0;
-//    for (int x = 0; x < WIDTH; x += 5) {
-//        int y = qrand() % HEIGHT;
-//        qp.drawLine(last_x, last_y, x, y);
-//        last_x = x;
-//        last_y = y;
-//    }
-//
-    int last_x;
-    int last_y;
-    for (int i = 0; i < (int)buffer->size(); i++) {
-        int x = (double)i / (buffer->size()) * (double)WIDTH;
-        int y = (buffer->at(i).x - (-1)) / 2.0 * HEIGHT;
-        if (i > 0) {
-            qp.drawLine(last_x, last_y, x, y);
-        }
+    int last_x = 0;
+    int last_y = 0;
+    for (int x = 0; x < WIDTH; x += 5) {
+        int y = qrand() % HEIGHT;
+        qp.drawLine(last_x, last_y, x, y);
         last_x = x;
         last_y = y;
     }
+*/
+
+    static auto x = new std::vector <double>(windowSize);
+    x->resize(windowSize);
+
+    static auto X = new std::vector <std::complex <double>>;
+    X->resize(windowSize);
+
+    for (int i = 0, last_x = 0, last_y = 0; i < (int)buffer->size(); i++) {
+        // int x = i;
+        // int y = 51.0 + buffer->at(i).x * 50.0;
+
+        for (int i = 0; i < windowSize; i++) {
+            x->at(i) = buffer->at(i).x;
+        }
+
+        fft->transform(x, X, windowSize);
+
+        double mx = std::numeric_limits<double>::min();
+        double mn = std::numeric_limits<double>::max();
+
+        for (int i = 0; i < windowSize; i++) {
+            mx = std::max(mx, std::abs(X->at(i)));
+            mn = std::min(mn, std::abs(X->at(i)));
+        }
+
+        int xx = (double)i / (buffer->size()) * (double)WIDTH;
+        int yy = (abs(X->at(i)) - mn) / (mx - mn) * HEIGHT;
+        yy = HEIGHT - yy;
+
+        // int y = (buffer->at(i).x - (-1)) / 2.0 * (double)HEIGHT;
+
+        if (i > 0) {
+            qp.drawLine(last_x, last_y, xx, yy);
+        }
+
+        last_x = xx;
+        last_y = yy;
+    }
 }
 
+void Chart::getData(AccData v) {
+    std::cout << "new data: " << v.x << " " << v.y << " " << v.z << "\n";
+    buffer->addValue(v);
+}
+
+void Chart::getDouble(double v) {
+    std::cout << "new single value" << v << "\n";
+    buffer->addValue(AccData(v, 0, 0));
+    repaint();
+}
