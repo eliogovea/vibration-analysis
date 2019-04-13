@@ -30,6 +30,9 @@ Chart::Chart(int _windowSize, int _timeDelay, std::string inputFile, QWidget* pa
     buffer = new Buffer<AccData>(_windowSize);
     fft = new FFT();
 
+    x = new std::vector<double>(windowSize);
+    X = new std::vector<std::complex<double>>(windowSize);
+
     resize(WIDTH, HEIGHT);
     // startTimer(timeDelay);
 }
@@ -51,36 +54,15 @@ void Chart::keyPressEvent(QKeyEvent *e) {
 
 void Chart::timerEvent(QTimerEvent *e) {
     Q_UNUSED(e);
-
-    buffer->addValue(reader->getLastValue());
-
-    repaint();
-
+    // buffer->addValue(reader->getLastValue());
+    // repaint();
     QWidget::timerEvent(e);
 }
 
 void Chart::doDrawing() {
-    // TODO
     QPainter qp(this);
     QPen pen(Qt::black, 2, Qt::SolidLine);
     qp.setPen(pen);
-/*
-    // generate random points, for testing
-    int last_x = 0;
-    int last_y = 0;
-    for (int x = 0; x < WIDTH; x += 5) {
-        int y = qrand() % HEIGHT;
-        qp.drawLine(last_x, last_y, x, y);
-        last_x = x;
-        last_y = y;
-    }
-*/
-
-    static auto x = new std::vector <double>(windowSize);
-    x->resize(windowSize);
-
-    static auto X = new std::vector <std::complex <double>>;
-    X->resize(windowSize);
 
     for (int i = 0; i < (int)buffer->size(); i++) {
         x->at(i) = buffer->at(i).x;
@@ -91,7 +73,7 @@ void Chart::doDrawing() {
     double mx = std::numeric_limits<double>::min();
     double mn = std::numeric_limits<double>::max();
 
-    for (int i = 0; i < windowSize; i++) {
+    for (int i = 0; i < (windowSize >> 1); i++) {
         mx = std::max(mx, std::abs(X->at(i)));
         mn = std::min(mn, std::abs(X->at(i)));
     }

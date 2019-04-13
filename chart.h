@@ -29,4 +29,6 @@ class Chart : public QWidget {
         Reader* reader;
         Buffer<AccData>* buffer;
         FFT* fft;
+        std::vector<double>* x;
+        std::vector<std::complex<double>>* X;
 };
