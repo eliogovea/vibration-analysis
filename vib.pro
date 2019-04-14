@@ -18,8 +18,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += accdata.h buffer.h chart.h fft.h reader.h
-SOURCES += accdata.cpp buffer.cpp chart.cpp fft.cpp main.cpp reader.cpp
+HEADERS += accdata.h buffer.h chart.h fft.h reader.h driver.h
+SOURCES += accdata.cpp buffer.cpp chart.cpp fft.cpp main.cpp reader.cpp driver.cpp
 
 QT += widgets
 
