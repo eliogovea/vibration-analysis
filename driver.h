@@ -1,14 +1,15 @@
 #pragma once
 
-#include <QObject>
+#include <QWidget>
+#include <QFrame>
 
 #include "reader.h"
 #include "signalchart.h"
 
-class Driver : public QObject {
+class Driver : public QFrame {
     Q_OBJECT
     public:
-        Driver(int windowSize);
+        Driver(int windowSize, QWidget* parent = 0);
     public slots:
         void getNewData(AccData);
         void getNewX(double);
@@ -16,6 +17,8 @@ class Driver : public QObject {
         void getNewZ(double);
         void getNewAbs(double);
     private:
+        int width = 900;
+        int height = 640;
         int windowSize;
         Reader* reader;
         SignalChart* x;

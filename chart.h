@@ -13,7 +13,7 @@ class Chart : public QFrame {
         void paintEvent(QPaintEvent *);
     private:
         int width = 320;
-        int height = 240;
+        int height = 120;
         std::vector<double> *x = nullptr; // !!!
         void doDrawing();
 };

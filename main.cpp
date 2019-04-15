@@ -28,6 +28,7 @@ int main(int argc, char* argv[]) {
     SignalChart schart(1 << 10);
     schart.show();
 */
-    Driver driver(1 << 10);
+    Driver driver(1 << 8);
+    driver.show();
     return app.exec();
 }

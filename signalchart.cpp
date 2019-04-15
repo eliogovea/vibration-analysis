@@ -11,7 +11,7 @@
 #include "signalchart.h"
 
 SignalChart::SignalChart(int windowSize, QWidget* parent) : windowSize(windowSize), QFrame(parent) {
-    resize(700, 700);
+    resize(width, height);
 
     buffer = new Buffer<double>(windowSize);
     x = new std::vector<double>(windowSize);
@@ -32,12 +32,11 @@ SignalChart::SignalChart(int windowSize, QWidget* parent) : windowSize(windowSiz
 }
 
 void SignalChart::getNewX(double v) {
-    std::cout << "????\n";
     buffer->addValue(v);
     for (int i = 0; i < windowSize; i++) {
         x->at(i) = buffer->at(i);
     }
-    fft->transform(x, X, windowSize, false);
+    fft->transform(x, X, windowSize, true);
     for (int i = 0; i < windowSize; i++) {
         absX->at(i) = abs(X->at(i));
     }

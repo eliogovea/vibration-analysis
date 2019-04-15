@@ -19,6 +19,8 @@ class SignalChart : public QFrame {
     public slots:
         void getNewX(double);
     private:
+        int width = 720;
+        int height = 120;
         int windowSize;
         Buffer<double>* buffer;
         std::vector<double>* x;
