@@ -9,6 +9,11 @@
 #include "driver.h"
 
 Driver::Driver(int _windowSize) : windowSize(_windowSize) {
+    x = new SignalChart(windowSize);
+    y = new SignalChart(windowSize);
+    z = new SignalChart(windowSize);
+    l = new SignalChart(windowSize);
+
     QThread *inputThread = new QThread;
     reader = new Reader();
     reader->moveToThread(inputThread);
@@ -17,73 +22,38 @@ Driver::Driver(int _windowSize) : windowSize(_windowSize) {
     QObject::connect(reader, &Reader::newDataX, this, &Driver::getNewX);
     QObject::connect(reader, &Reader::newDataY, this, &Driver::getNewY);
     QObject::connect(reader, &Reader::newDataZ, this, &Driver::getNewZ);
+    QObject::connect(reader, &Reader::newDataAbs, this, &Driver::getNewAbs);
     inputThread->start();
 
-
-    bx = new Buffer<double>(windowSize);
-    by = new Buffer<double>(windowSize);
-    bz = new Buffer<double>(windowSize);
-    bv = new Buffer<AccData>(windowSize);
-
-    x = new std::vector<double>(windowSize);
-    y = new std::vector<double>(windowSize);
-    z = new std::vector<double>(windowSize);
-    v = new std::vector<double>(windowSize);
-
-    X = new std::vector<std::complex<double>>(windowSize);
-    Y = new std::vector<std::complex<double>>(windowSize);
-    Z = new std::vector<std::complex<double>>(windowSize);
-    V = new std::vector<std::complex<double>>(windowSize);
-
-    chartX = new Chart();
-    chartY = new Chart();
-    chartZ = new Chart();
-    chartV = new Chart();
-
-    chartX->show();
-    chartY->show();
-    chartZ->show();
-    // chartV->show();
-
-    fft = new FFT();
+    x->show();
+    y->show();
+    z->show();
+    l->show();
 }
 
 // TEST
 void Driver::getNewX(double dx) {
-    // std::cout << "new x " << dx << "\n";
-    processNew(dx, bx, x, X, chartX);
+    std::cout << "new x " << dx << "\n";
+    processNew(dx, x);
 }
 
 void Driver::getNewY(double dy) {
     // std::cout << "new y " << dy << "\n";
-    processNew(dy, by, y, Y, chartY);
+    processNew(dy, y);
 }
 void Driver::getNewZ(double dz) {
     // std::cout << "new z " << dz << "\n";
-    processNew(dz, bz, z, Z, chartZ);
+    processNew(dz, z);
+}
+
+void Driver::getNewAbs(double dl) {
+    processNew(dl, l);
 }
 
 void Driver::getNewData(AccData d) {
-    // std::cout << "new data " << d.x << " " << d.y << " " << d.z;
-
-    // TODO process each fft in a separated thread
-    
-    processNew(d.x, bx, x, X, chartX);
-    // processNew(v.y, by, y, Y, chartY);
-    // processNew(v.z, bz, z, Z, chartZ);
-
-    // TODO process abs value
+    // TODO
 }
 
-void Driver::processNew(double nx, Buffer<double>* b, std::vector<double>* x, std::vector<std::complex<double>>* X, Chart* chart) {
-    b->addValue(nx);
-    for (int i = 0; i < windowSize; i++) {
-        x->at(i) = b->at(i);
-    }
-    fft->transform(x, X, windowSize, false);
-    for (int i = 0; i < windowSize; i++) {
-        x->at(i) = abs(X->at(i));
-    }
-    chart->setXToDraw(x);
-    chart->repaint();
+void Driver::processNew(double v, SignalChart *sc) {
+    sc->getNewX(v);
 }

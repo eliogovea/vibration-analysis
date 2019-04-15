@@ -2,26 +2,31 @@
 #include <algorithm>
 #include <limits>
 
-#include <QObject>
+#include <QWidget>
+#include <QFrame>
 #include <QPainter>
 
 #include "chart.h"
 
-Chart::Chart(QWidget* parent) : QWidget(parent) {
+Chart::Chart(QWidget* parent) : QFrame(parent) {
     resize(width, height);
 }
 
-void Chart::setXToDraw(std::vector<double>* x) {
-    this->x = x;
+void Chart::setXToDraw(std::vector<double>* _x) {
+    x = _x;
 }
 
 void Chart::paintEvent(QPaintEvent *e) {
     Q_UNUSED(e);
-    doDrawing(x);
-    QWidget::paintEvent(e);
+    doDrawing();
+    QFrame::paintEvent(e);
 }
 
-void Chart::doDrawing(std::vector<double>* x) {
+void Chart::doDrawing() {
+    if (x == nullptr) {
+        return;
+    }
+
     QPainter qp(this);
     QPen pen(Qt::black, 2, Qt::SolidLine);
     qp.setPen(pen);

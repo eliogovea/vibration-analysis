@@ -13,5 +13,6 @@ bool Reader::start() {
         emit newDataX(newValue.x);
         emit newDataY(newValue.y);
         emit newDataZ(newValue.z);
+        emit newDataAbs(newValue.abs());
     }
 }

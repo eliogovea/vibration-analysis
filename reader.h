@@ -12,6 +12,7 @@ class Reader : public QObject {
         void newDataX(double x);
         void newDataY(double y);
         void newDataZ(double z);
+        void newDataAbs(double v);
         void newData(AccData v);
     public slots:
         bool start();

@@ -2,18 +2,18 @@
 
 #include <vector>
 
-#include <QWidget>
+#include <QFrame>
 
-class Chart : public QWidget {
+class Chart : public QFrame {
     Q_OBJECT
     public:
         Chart(QWidget* parent = 0);
         void setXToDraw(std::vector<double>*);
-        void doDrawing(std::vector<double>* x);
     protected:
         void paintEvent(QPaintEvent *);
     private:
         int width = 320;
         int height = 240;
-        std::vector<double> *x;
+        std::vector<double> *x = nullptr; // !!!
+        void doDrawing();
 };

@@ -4,6 +4,8 @@
 #include <vector>
 #include <cmath>
 
+#include <QVector>
+
 class FFT {
     using base = std::complex <double>;
     static constexpr double PI = acos(-1);
@@ -17,11 +19,11 @@ class FFT {
         int reverseBits(int, int);
 
         // window
-        std::vector <double> ractangleWindow(int);
-        void applyWindow(std::vector <double>*, std::vector <double>*);
+        QVector<double> ractangleWindow(int);
+        void applyWindow(std::vector<double>*, std::vector<double>*);
 
         // fft
-        void transform(std::vector <double>*, std::vector <base>*, int, bool);  
+        void transform(std::vector<double>*, std::vector<base>*, int, bool);  
 
         std::vector<double>* a;
         std::vector<std::complex<double>>* A;
