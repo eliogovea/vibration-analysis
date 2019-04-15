@@ -1,1 +1,1 @@
-time ./gen_cos 15 5 2000 | ./vib
+time ./gen_cos 2000 100 2000 | ./vib
