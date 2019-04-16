@@ -1,3 +1,5 @@
 *.o
 vib
 moc_*
+Makefile
+.qmake.stash
