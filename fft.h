@@ -20,11 +20,9 @@ class FFT {
 
         // window
         QVector<double> ractangleWindow(int);
-        void applyWindow(std::vector<double>*, std::vector<double>*);
+        void applyWindow(QVector<double>, QVector<double>);
 
         // fft
-        void transform(std::vector<double>*, std::vector<base>*, int, bool);  
-
-        std::vector<double>* a;
-        std::vector<std::complex<double>>* A;
+        void transform(const QVector<double>&, QVector<base>&, int, bool);
+        std::vector<base> A;
 };
