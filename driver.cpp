@@ -18,13 +18,13 @@ Driver::Driver(int _windowSize, QWidget* parent) :
     QVBoxLayout* vbox = new QVBoxLayout(this);
 
     x = new SignalChart(windowSize);
-    // y = new SignalChart(windowSize);
-    // z = new SignalChart(windowSize);
+    y = new SignalChart(windowSize);
+    z = new SignalChart(windowSize);
     l = new SignalChart(windowSize);
 
     vbox->addWidget(x);
-    // vbox->addWidget(y);
-    // vbox->addWidget(z);
+    vbox->addWidget(y);
+    vbox->addWidget(z);
     vbox->addWidget(l);
 
     QThread *inputThread = new QThread;
@@ -33,8 +33,8 @@ Driver::Driver(int _windowSize, QWidget* parent) :
     QObject::connect(inputThread, &QThread::started, reader, &Reader::start);
     // QObject::connect(reader, &Reader::newData, this, &Driver::getNewData);
     QObject::connect(reader, &Reader::newDataX, this, &Driver::getNewX);
-    // QObject::connect(reader, &Reader::newDataY, this, &Driver::getNewY);
-    // QObject::connect(reader, &Reader::newDataZ, this, &Driver::getNewZ);
+    QObject::connect(reader, &Reader::newDataY, this, &Driver::getNewY);
+    QObject::connect(reader, &Reader::newDataZ, this, &Driver::getNewZ);
     QObject::connect(reader, &Reader::newDataAbs, this, &Driver::getNewAbs);
     inputThread->start();
 

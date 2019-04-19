@@ -1,5 +1,4 @@
 #include <complex>
-#include <iostream>
 #include <algorithm>
 
 #include <QVector>
@@ -8,7 +7,6 @@
 #include <QVBoxLayout>
 
 #include "buffer.h"
-#include "chart.h"
 #include "signalchart.h"
 
 SignalChart::SignalChart(int windowSize, QWidget* parent) :
