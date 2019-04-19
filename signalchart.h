@@ -3,9 +3,12 @@
 #include <QObject>
 #include <QWidget>
 #include <QFrame>
+#include <QVector>
 
 #include <vector>
 #include <complex>
+
+#include "qcustomplot.h"
 
 #include "buffer.h"
 #include "fft.h"
@@ -22,12 +25,13 @@ class SignalChart : public QFrame {
         int width = 720;
         int height = 120;
         int windowSize;
-        Buffer<double>* buffer;
-        std::vector<double>* x;
-        std::vector<base>* X;
-        std::vector<double>* absX;
-        FFT* fft;
-
-        Chart* chartx;
-        Chart* chartX;
+        Buffer<double> buffer;
+        QVector<double> t;
+        QVector<double> f;
+        QVector<double> x;
+        QVector<base> X;
+        QVector<double> absX;
+        FFT fft;
+        QCustomPlot* plotx;
+        QCustomPlot* plotX;
 };

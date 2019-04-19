@@ -1,7 +1,8 @@
-#include <vector>
 #include <complex>
 #include <iostream>
+#include <algorithm>
 
+#include <QVector>
 #include <QWidget>
 #include <QFrame>
 #include <QVBoxLayout>
@@ -10,39 +11,69 @@
 #include "chart.h"
 #include "signalchart.h"
 
-SignalChart::SignalChart(int windowSize, QWidget* parent) : windowSize(windowSize), QFrame(parent) {
+SignalChart::SignalChart(int windowSize, QWidget* parent) :
+    windowSize(windowSize), 
+    buffer(windowSize),
+    t(windowSize),
+    f(windowSize),
+    x(windowSize),
+    X(windowSize),
+    absX(windowSize),
+    fft(),
+    QFrame(parent)
+{
+
     resize(width, height);
 
-    buffer = new Buffer<double>(windowSize);
-    x = new std::vector<double>(windowSize);
-    X = new std::vector<base>(windowSize);
-    absX = new std::vector<double>(windowSize);
-    fft = new FFT();
+    for (int i = 0; i < windowSize; i++) {
+        t[i] = (double)i / (double)windowSize;
+        f[i] = (double)i / (double)windowSize - 0.5;
+    }
 
     QHBoxLayout* hbox = new QHBoxLayout(this);
     hbox->setSpacing(1);
 
-    chartx = new Chart(this);
-    chartX = new Chart(this);
+    plotx = new QCustomPlot(this);
+    plotx->addGraph();
+    plotx->xAxis->setRange(0, 1);
 
-    hbox->addWidget(chartx);
-    hbox->addWidget(chartX);
+    plotX = new QCustomPlot(this);
+    plotX->addGraph();
+    plotX->xAxis->setRange(-0.5, 0.5);
+
+    hbox->addWidget(plotx);
+    hbox->addWidget(plotX);
 
     setLayout(hbox);
 }
 
 void SignalChart::getNewX(double v) {
-    buffer->addValue(v);
+    buffer.addValue(v);
     for (int i = 0; i < windowSize; i++) {
-        x->at(i) = buffer->at(i);
+        x[i] = buffer[i];
     }
-    fft->transform(x, X, windowSize, true);
+    fft.transform(x, X, windowSize, true);
     for (int i = 0; i < windowSize; i++) {
-        absX->at(i) = abs(X->at(i));
+        absX[i] = abs(X[i]);
     }
-    chartx->setXToDraw(x);
-    chartx->repaint();
 
-    chartX->setXToDraw(absX);
-    chartX->repaint();
+    double minx = x[0];
+    double maxx = x[0];
+    double minX = absX[0];
+    double maxX = absX[0];
+
+    for (int i = 1; i < windowSize; i++) {
+        minx = std::min(minx, x[i]);
+        maxx = std::max(maxx, x[i]);
+        minX = std::min(minX, absX[i]);
+        maxX = std::max(maxX, absX[i]);
+    }
+
+    plotx->graph(0)->setData(t, x);
+    plotx->yAxis->setRange(minx, maxx);
+    plotx->replot();
+
+    plotX->graph(0)->setData(f, absX);
+    plotX->yAxis->setRange(minX, maxX);
+    plotX->replot();
 }
