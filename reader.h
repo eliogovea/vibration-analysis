@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QSerialPort>
 
 #include "accdata.h"
 
@@ -16,6 +17,9 @@ class Reader : public QObject {
         void newData(AccData v);
     public slots:
         bool start();
+        void handleReadyRead();
     private:
         AccData newValue = AccData();
+        QSerialPort *serial;
+        QByteArray raw;
 };

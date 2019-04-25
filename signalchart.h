@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 
 #include <QObject>
 #include <QWidget>
@@ -34,4 +35,5 @@ class SignalChart : public QFrame {
         FFT fft;
         QCustomPlot* plotx;
         QCustomPlot* plotX;
+        double lastPointKey = std::numeric_limits<double>::min();
 };

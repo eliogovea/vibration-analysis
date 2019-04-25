@@ -21,6 +21,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += accdata.h buffer.h chart.h fft.h reader.h driver.h signalchart.h qcustomplot.h
 SOURCES += accdata.cpp buffer.cpp chart.cpp fft.cpp main.cpp reader.cpp driver.cpp signalchart.cpp qcustomplot.cpp
 
-QT += widgets core gui printsupport
+QT += widgets core gui printsupport serialport
 
 QMAKE_CXXFLAGS += -std=gnu++14

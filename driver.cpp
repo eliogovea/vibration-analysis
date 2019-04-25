@@ -31,7 +31,7 @@ Driver::Driver(int _windowSize, QWidget* parent) :
     reader = new Reader();
     reader->moveToThread(inputThread);
     QObject::connect(inputThread, &QThread::started, reader, &Reader::start);
-    // QObject::connect(reader, &Reader::newData, this, &Driver::getNewData);
+    QObject::connect(reader, &Reader::newData, this, &Driver::getNewData);
     QObject::connect(reader, &Reader::newDataX, this, &Driver::getNewX);
     QObject::connect(reader, &Reader::newDataY, this, &Driver::getNewY);
     QObject::connect(reader, &Reader::newDataZ, this, &Driver::getNewZ);

@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QFrame>
 #include <QVBoxLayout>
+#include <QTime>
 
 #include "buffer.h"
 #include "signalchart.h"
@@ -34,6 +35,7 @@ SignalChart::SignalChart(int windowSize, QWidget* parent) :
     plotx = new QCustomPlot(this);
     plotx->addGraph();
     plotx->xAxis->setRange(0, 1);
+    plotx->yAxis->setRange(-2, 2);
 
     plotX = new QCustomPlot(this);
     plotX->addGraph();
@@ -47,10 +49,24 @@ SignalChart::SignalChart(int windowSize, QWidget* parent) :
 
 void SignalChart::getNewX(double v) {
     buffer.addValue(v);
+
+    static QTime time(QTime::currentTime());
+    // calculate two new data points:
+    double key = time.elapsed()/1000.0; // time elapsed since start of demo, in seconds
+
+    if (key - lastPointKey < 0.1) {
+        return;
+    }
+
+    lastPointKey = key;
+
     for (int i = 0; i < windowSize; i++) {
         x[i] = buffer[i];
     }
+
+
     fft.transform(x, X, windowSize, true);
+
     for (int i = 0; i < windowSize; i++) {
         absX[i] = abs(X[i]);
     }
@@ -68,7 +84,8 @@ void SignalChart::getNewX(double v) {
     }
 
     plotx->graph(0)->setData(t, x);
-    plotx->yAxis->setRange(minx, maxx);
+    // plotx->yAxis->setRange(minx, maxx);
+    // plotx->yAxis->setRange(-2, 2);
     plotx->replot();
 
     plotX->graph(0)->setData(f, absX);
